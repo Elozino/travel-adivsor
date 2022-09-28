@@ -1,11 +1,18 @@
 import { Flex, Input, InputGroup, InputRightElement, Menu, MenuItem, MenuList, MenuButton, Text } from '@chakra-ui/react'
 import { Rating } from '@material-ui/lab'
 import { Autocomplete } from '@react-google-maps/api'
-import React from 'react'
+import React, { useState } from 'react'
 
 import { BiChevronDown, BiHotel, BiMapAlt, BiRestaurant, BiSearch, BiStar } from "react-icons/bi"
 
-export default function Header({ type, setType, setRatings }) {
+export default function Header({ setType, setRatings, setCoordinates }) {
+  const [autocomplete, setAutocomplete] = useState(null)
+
+  const onPlaceChanged = () => {
+    const lat = autocomplete.getPlace().geometry.location.lat()
+    const lng = autocomplete.getPlace().geometry.location.lng()
+    setCoordinates({ lat, lng })
+  }
   return (
     <Flex
       position="absolute"
@@ -17,27 +24,27 @@ export default function Header({ type, setType, setRatings }) {
       zIndex={100}
     >
       <Flex>
-        {/* <Autocomplete> */}
-        <InputGroup width={"35vw"} shadow="lg">
-          <InputRightElement
-            pointerEvents={"none"}
-            // eslint-disable-next-line react/no-children-prop
-            children={
-              <BiSearch size={20} color="gray" />
-            }
-          />
-          <Input type="text"
-            placeholder="Search Google Map..."
-            variant="filled"
-            fontSize={18}
-            bg="white"
-            color="gray.700"
-            _hover={{ bg: "whiteAlpha.800" }}
-            _focus={{ bg: "whiteAlpha.800" }}
-            _placeholder={{ color: "" }}
-          />
-        </InputGroup>
-        {/* </Autocomplete> */}
+        <Autocomplete onLoad={(params) => setAutocomplete(params)} onPlaceChanged={onPlaceChanged}>
+          <InputGroup width={"33vw"} shadow="lg">
+            <InputRightElement
+              pointerEvents={"none"}
+              // eslint-disable-next-line react/no-children-prop
+              children={
+                <BiSearch size={20} color="gray" />
+              }
+            />
+            <Input type="text"
+              placeholder="Search Google Map..."
+              variant="filled"
+              fontSize={18}
+              bg="white"
+              color="gray.700"
+              _hover={{ bg: "whiteAlpha.800" }}
+              _focus={{ bg: "whiteAlpha.800" }}
+              _placeholder={{ color: "" }}
+            />
+          </InputGroup>
+        </Autocomplete>
         <Flex
           alignItems={"center"}
           justifyContent="center"
@@ -65,26 +72,26 @@ export default function Header({ type, setType, setRatings }) {
                 <MenuItem display="flex" justifyContent="center" onClick={() => setRatings("")}>
                   <Text fontSize={18} fontWeight={500} color="gray.700">All Ratings</Text>
                 </MenuItem>
-                <MenuItem display="flex" justifyContent="space-around" alignItems="center" onClick={() => setRatings("all")}>
+                <MenuItem display="flex" justifyContent="space-around" alignItems="center" onClick={() => setRatings(2)}>
                   <Text fontSize={18} fontWeight={500} color="orange.700">2.0</Text>
                   <Rating size="small" value={2} readOnly />
                 </MenuItem>
-                <MenuItem display="flex" justifyContent="space-around" alignItems="center" onClick={() => setRatings("all")}>
+                <MenuItem display="flex" justifyContent="space-around" alignItems="center" onClick={() => setRatings(3)}>
                   <Text fontSize={18} fontWeight={500} color="orange.700">3.0</Text>
                   <Rating size="small" value={3} readOnly />
                 </MenuItem>
-                <MenuItem display="flex" justifyContent="space-around" alignItems="center" onClick={() => setRatings("all")}>
+                <MenuItem display="flex" justifyContent="space-around" alignItems="center" onClick={() => setRatings(4)}>
                   <Text fontSize={18} fontWeight={500} color="orange.700">4.00</Text>
                   <Rating size="small" value={3} readOnly />
                 </MenuItem>
-                <MenuItem display="flex" justifyContent="space-around" alignItems="center" onClick={() => setRatings("all")}>
+                <MenuItem display="flex" justifyContent="space-around" alignItems="center" onClick={() => setRatings(4.5)}>
                   <Text fontSize={18} fontWeight={500} color="orange.700">4.5</Text>
                   <Rating size="small" value={4.5} readOnly />
                 </MenuItem>
-                <MenuItem display="flex" justifyContent="space-around" alignItems="center" onClick={() => setRatings("all")}>
+                {/* <MenuItem display="flex" justifyContent="space-around" alignItems="center" onClick={() => setRatings(5)}>
                   <Text fontSize={18} fontWeight={500} color="orange.700">5.0</Text>
                   <Rating size="small" value={5} readOnly />
-                </MenuItem>
+                </MenuItem> */}
               </MenuList>
             </Menu>
             <BiChevronDown size={25} />
@@ -108,7 +115,7 @@ export default function Header({ type, setType, setRatings }) {
             <BiRestaurant size={25} />
             <Text ml={3} fontSize="16">Restaurant</Text>
           </Flex>
-           
+
           <Flex
             alignItems={"center"}
             justifyContent="center"
