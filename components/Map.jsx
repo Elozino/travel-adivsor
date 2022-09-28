@@ -10,7 +10,7 @@ export default function Map({ places, coordinates, setCoordinates, setBounds }) 
   return (
     <Box width="full" height="full">
       <GoogleMapReact
-        bootstrapURLKeys={{ key: process.env.GOOGLE_MAP_API_KEY }}
+        bootstrapURLKeys={{ key: process.env.NEXT_PUBLIC_GOOGLE_MAP_API_KEY }}
         defaultCenter={{ lat: 0, lng: 0 }}
         center={coordinates}
         defaultZoom={10}
